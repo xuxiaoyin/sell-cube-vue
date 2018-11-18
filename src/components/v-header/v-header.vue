@@ -12,7 +12,7 @@
           </div>
           <div class="description">{{seller.description}} / {{seller.deliveryTime}}分钟送达</div>
           <div class="supports" v-if="seller.supports">
-            <span class="icon"></span>
+            <support-icon class="support-icon" :size='1' :type="seller.supports[0].type"></support-icon>
             <span class="text">{{seller.supports[0].description}}</span>
           </div>
         </div>
@@ -31,6 +31,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import SupportIcon from 'components/support-icon/support-icon'
+
   export default {
     props:{
       seller:{
@@ -39,6 +41,9 @@
           return {}
         }
       }
+    },   
+    components: {
+      SupportIcon
     }
   }
 </script>
@@ -81,9 +86,13 @@
           font-size: $fontsize-small
           font-weight: 200
         .supports
-          line-height: 20px
+          display: flex
+          align-items: center
+          line-height: 12px
           font-size: $fontsize-small-s
           font-weight: 200
+          .support-icon
+            margin-right: 4px
 
       .supportsnum
         position: absolute
