@@ -13,6 +13,7 @@
           <div class="description">{{seller.description}} / {{seller.deliveryTime}}分钟送达</div>
           <div class="supports" v-if="seller.supports">
             <support-icon class="support-icon" :size='1' :type="seller.supports[0].type"></support-icon>
+            <span class="icon"></span>
             <span class="text">{{seller.supports[0].description}}</span>
           </div>
         </div>
@@ -44,7 +45,7 @@
     },   
     components: {
       SupportIcon
-    }
+   }
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
@@ -93,6 +94,9 @@
           font-weight: 200
           .support-icon
             margin-right: 4px
+          line-height: 20px
+          font-size: $fontsize-small-s
+          font-weight: 200
 
       .supportsnum
         position: absolute
