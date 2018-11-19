@@ -11,7 +11,7 @@
             <div class="line"></div>
           </div>
           <ul class="supports">
-            <li v-for="item in seller.supports" class="item">
+            <li v-for="(item,index) of seller.supports" :key="index" class="item">
               <support-icon :size=1 :type="item.type" class="icon"></support-icon>
               <span class="text">{{item.description}}</span>
             </li>
