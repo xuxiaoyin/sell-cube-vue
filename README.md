@@ -39,3 +39,8 @@ yarn global add @vue/cli
 
 创建项目：
 vue create hello-world
+
+
+安装依赖报错
+报错: npm resource busy or locked.....
+解决方案：关掉360
