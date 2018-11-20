@@ -1,12 +1,14 @@
 <template>
   <div id="app">
     <v-header :seller="seller"></v-header>
+    <tab></tab>
   </div>
 </template>
 
 <script>
 import VHeader from 'components/v-header/v-header'
 import {getSeller} from 'api'
+import Tab from 'components/tab/tab'
 
 export default {
   data(){
@@ -20,7 +22,8 @@ export default {
     })
   },
   components:{
-    VHeader
+    VHeader,
+    Tab
   }
 }
 </script>
