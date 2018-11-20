@@ -71,7 +71,7 @@
       position: relative
       display: flex
       align-items: center center
-      padding: 24px 12px 24px 18px
+      padding: 24px 12px 12px 18px
       .avatar
         flex: 0 0 64px
         margin-right: 16px

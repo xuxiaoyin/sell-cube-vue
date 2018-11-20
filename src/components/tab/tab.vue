@@ -11,8 +11,9 @@
         :loop="false"
         :auto-play="false"
         :show-dots="false"
-        :initial-index=index
+        :initial-index="index"
         ref="slide"
+        @change="changePage"
       >
         <cube-slide-item>
           <goods></goods>
@@ -57,6 +58,11 @@ import Seller from 'components/seller/seller'
       }
     }
   },
+  methods:{
+    changePage(){
+      
+    }
+  },
   components: {
     Goods,
     Ratings,
@@ -71,6 +77,13 @@ import Seller from 'components/seller/seller'
 .border-bottom-1px
   border-1px($color-row-line)
 
->>>.cube-tab
-  padding 10px 0
+.tab
+  display: flex
+  flex-direction: column
+  height: 100%
+  >>>.cube-tab
+    padding 10px 0
+  .slid-wrap
+    flex: 1
+    overflow: hidden
 </style>

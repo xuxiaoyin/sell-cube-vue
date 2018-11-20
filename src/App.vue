@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <v-header :seller="seller"></v-header>
-    <tab></tab>
+    <div class="tab-wrap">
+      <tab></tab>
+    </div> 
   </div>
 </template>
 
@@ -28,5 +30,11 @@ export default {
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-
+#app
+  .tab-wrap
+    position: fixed;
+    top: 134px
+    left: 0
+    bottom: 0
+    right: 0
 </style>
