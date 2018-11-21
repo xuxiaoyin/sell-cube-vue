@@ -8,6 +8,28 @@
         :options="scrollOptions"
         @change="changeHandler"
         @sticky-change="stickyChangeHandler">
+        <template slot="bar" slot-scope="props">
+          <cube-scroll-nav-bar
+            direction="vertical"
+            :labels="props.labels"
+            :txts="barTxts"
+            :current="props.current"
+          >
+            <template slot-scope="props">
+              <div class="text">
+                <support-icon
+                  v-if="props.txt.type>=1"
+                  :size=3
+                  :type="props.txt.type"
+                ></support-icon>
+                <span>{{props.txt.name}}</span>
+                <span class="num" v-if="props.txt.count">
+                  <bubble :num="props.txt.count"></bubble>
+                </span>
+              </div>
+            </template>
+          </cube-scroll-nav-bar>
+        </template>
         <cube-scroll-nav-panel
           v-for="item in goods"
           :key="item.name"
@@ -73,6 +95,24 @@ export default {
       })
     }
   },
+  computed:{
+    barTxts() {
+      let ret = []
+      this.goods.forEach((good) => {
+        const {type, name, foods} = good
+        let count = 0
+        foods.forEach((food) => {
+          count += food.count || 0
+        })
+        ret.push({
+          type,
+          name,
+          count
+        })
+      })
+      return ret
+    }
+  },
   components:{
     SupportIcon
   }
@@ -110,6 +150,17 @@ export default {
     background: $background-dark4
     color: $clor-dark1
     font-weight: 200
+    .text
+        flex: 1
+        position: relative
+    .num
+      position: absolute
+      right: -8px
+      top: -10px
+    .support-icon
+      display: inline-block
+      vertical-align: top
+      margin-right: 4px
   >>>.cube-scroll-nav-bar-item_active
     background: #fff
     color: #000
@@ -138,12 +189,15 @@ export default {
         .text
           flex：1
           .name
+            overflow: hidden
             line-height: 14px
             margin-right: 2px
             margin-bottom: 8px
             font-size: 14px
             color: rgb(7,17,27)
           .description,.info
+            width: 80%
+            overflow: hidden
             line-height: 10px
             margin-bottom: 8px
             font-size: 10px
