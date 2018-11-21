@@ -24,7 +24,7 @@
       >        
         <cube-slide-item v-for="(tab,index) in tabs" :key="index">
           <!-- 设置动态组件 -->
-          <component :is="tab.component" :data="tab.data"></component>
+          <component :is="tab.component" :data="tab.data" ref="component"></component>
         </cube-slide-item>
       </cube-slide>
     </div>
@@ -38,7 +38,7 @@
      tabs:{
        type: Array,
        default(){
-         return {}
+         return []
        }
      },
      initialIndex:{
@@ -77,6 +77,8 @@
   methods:{
     changePage(current){
       this.index=current
+      const component=this.$refs.component[current]
+      component.fetch && component.fetch() //动态获取数据
     },
     scroll(pos){
       const x = Math.abs(pos.x)
@@ -85,13 +87,10 @@
       const deltaX = x / slideScrollerWidth * tabItemWidth
       this.$refs.tabNav.setSliderTransform(deltaX)
     }
+  },
+  mounted(){
+    this.changePage(this.index)
   }
-  // ,
-  // components: {
-  //   Goods,
-  //   Ratings,
-  //   Seller
-  // }
 }
 </script>
 
