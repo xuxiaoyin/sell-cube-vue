@@ -52,10 +52,14 @@
                   </div>
                 </div>
               </div>
+              <cart-ctrol class="art-ctrol"></cart-ctrol>
             </li>
           </ul>
         </cube-scroll-nav-panel>
       </cube-scroll-nav>
+    </div>
+    <div class="shop-wrap">
+      <cart-shop></cart-shop>
     </div>
   </div>
 </template>
@@ -63,6 +67,8 @@
 <script>
 import {getGoods} from 'api'
 import SupportIcon from 'components/support-icon/support-icon'
+import CartCtrol from 'components/cart-ctrol/cart-ctrol'
+import CartShop from 'components/cart-shop/cart-shop'
 
 export default {
   props:{
@@ -114,7 +120,9 @@ export default {
     }
   },
   components:{
-    SupportIcon
+    SupportIcon,
+    CartCtrol,
+    CartShop
   }
 }
 </script>
@@ -177,6 +185,10 @@ export default {
     paddign-right: 18px
     .food
       padding: 18px 0 18px 18px
+      .art-ctrol
+        position: absolute
+        right: 18px
+        bottom: 18px
       .food-detail
         display: flex
         .pic
@@ -189,15 +201,12 @@ export default {
         .text
           flex：1
           .name
-            overflow: hidden
             line-height: 14px
             margin-right: 2px
             margin-bottom: 8px
             font-size: 14px
             color: rgb(7,17,27)
           .description,.info
-            width: 80%
-            overflow: hidden
             line-height: 10px
             margin-bottom: 8px
             font-size: 10px
@@ -243,4 +252,20 @@ export default {
         
       
 
+
+
+
+
+
+
+
+
+
+
+  .shop-wrap
+    position: absolute
+    left:0
+    bottom:0
+    width: 100%
+    height: 48px
 </style>
