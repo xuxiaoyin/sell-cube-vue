@@ -22,12 +22,36 @@
 
 <script>
 export default {
-  data(){
-    return {
-      totalCount: 1,
-      minPrice:20,
-      deliveryPrice:4,
-      totalPrice:10
+  props:{
+    selectFood: {
+      type: Array,
+      default() {
+          return []
+      }
+    },
+    minPrice: {
+      type: Number,
+      default: 0
+    },
+    deliveryPrice: {
+      type: Number,
+      default: 0
+    }
+  },
+  computed:{
+    totalPrice(){
+      let total=0;
+      this.selectFood.forEach((food)=>{
+        total+=food.count*food.price
+      })
+      return total
+    },
+    totalCount(){
+      let total=0;
+      this.selectFood.forEach((food)=>{
+        total+=food.count
+        return total
+      })
     }
   }
 }
@@ -69,14 +93,15 @@ export default {
             color: #fff
         .num
           position: absolute 
-          color: #fff
-          background: #f01414
           top: 0
           right: 0
           padding: 0 5px
           height: 16px
+          width: 13px
           line-height: 16px
           text-align: center
+          color: #fff
+          background: #f01414
           border-radius: 16px
           font-family: Helvetica
           font-weight: 700

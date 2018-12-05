@@ -24,7 +24,7 @@
                 ></support-icon>
                 <span>{{props.txt.name}}</span>
                 <span class="num" v-if="props.txt.count">
-                  <bubble :num="props.txt.count"></bubble>
+                  <!-- <bubble :num="props.txt.count"></bubble> -->
                 </span>
               </div>
             </template>
@@ -52,20 +52,21 @@
                   </div>
                 </div>
               </div>
-              <cart-ctrol class="art-ctrol"></cart-ctrol>
+              <cart-ctrol class="art-ctrol" :food="food"></cart-ctrol>
             </li>
           </ul>
         </cube-scroll-nav-panel>
       </cube-scroll-nav>
     </div>
     <div class="shop-wrap">
-      <cart-shop></cart-shop>
+      <cart-shop :select-food="selectFood"></cart-shop>
     </div>
   </div>
 </template>
 
 <script>
 import {getGoods} from 'api'
+import {getSeller} from 'api'
 import SupportIcon from 'components/support-icon/support-icon'
 import CartCtrol from 'components/cart-ctrol/cart-ctrol'
 import CartShop from 'components/cart-shop/cart-shop'
@@ -82,6 +83,7 @@ export default {
   data() {
     return{
       goods:[],
+      seller:[],
       scrollOptions:{
         click:false,
         directionLockThreshold:0
@@ -102,6 +104,17 @@ export default {
     }
   },
   computed:{
+    selectFood(){
+      let foods=[];
+      this.goods.forEach((good)=>{
+        good.foods.forEach((food)=>{
+          if(food.count){
+            foods.push(food)
+          }
+        })
+      })
+      return foods
+    },
     barTxts() {
       let ret = []
       this.goods.forEach((good) => {

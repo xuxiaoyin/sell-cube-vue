@@ -9,7 +9,7 @@
 
 <script>
 import VHeader from 'components/v-header/v-header'
-import {getSeller} from 'api'
+import {getSeller,getGoods,getRatings} from 'api'
 import Tab from 'components/tab/tab'
 import Goods from 'components/goods/goods'
 import Ratings from 'components/ratings/ratings'
@@ -28,14 +28,14 @@ export default {
           label: '商品',
           component: Goods,
           data:{
-            seller: this.seller
+            goods: this.goods
           }
         },
         {
           label: '评价',
           component: Ratings,
           data:{
-            seller: this.seller
+            ratings: this.ratings
           }
         },
         {
