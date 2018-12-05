@@ -3,16 +3,18 @@
     <div class="cart-wrap">
       <div class="left-info">
         <div class="logo-wrap">
-          <div class="logo">
+          <div class="logo" :class="{'highlight':totalPrice>0}">
             <i class="icon-shopping_cart"></i>
           </div>
+          <div v-show="totalCount>0" class="num">{{totalCount}}</div>
         </div>
-        <div class="price">￥0</div>
+        <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥4元</div>
       </div>
       <div class="deliver">
-        <div class="normal" v-if="!show">￥20起送</div>
-        <div class="active" v-if="show">去结算</div>
+        <div class="normal" v-if="totalPrice===0">￥{{minPrice}}起送</div>
+        <div class="normal" v-if="totalPrice<minPrice">还差￥{{minPrice-totalPrice}}起送</div>
+        <div class="active" v-if="totalPrice>=minPrice">去结算</div>
       </div>
     </div>
   </div>
@@ -22,7 +24,10 @@
 export default {
   data(){
     return {
-      show:false
+      totalCount: 1,
+      minPrice:20,
+      deliveryPrice:4,
+      totalPrice:10
     }
   }
 }
@@ -59,12 +64,32 @@ export default {
           font-size: 20px
           line-height: 44px
           text-align: center
+          &.highlight
+            background: #00a0dc
+            color: #fff
+        .num
+          position: absolute 
+          color: #fff
+          background: #f01414
+          top: 0
+          right: 0
+          padding: 0 5px
+          height: 16px
+          line-height: 16px
+          text-align: center
+          border-radius: 16px
+          font-family: Helvetica
+          font-weight: 700
+          font-size: 9px
+          box-shadow: 4px 0 8px rgba(0,0,0,.4) 
       .price
         line-height: 48px
         margin: 0 12px
         font-size: 16px
         color: #919396
         font-weight: bold
+        &.highlight
+         color: #fff
       .desc
         height: 24px
         line-height: 24px
@@ -82,6 +107,8 @@ export default {
       color: #808589
       font-size: 12px
       font-weight: bold
-
+      .active
+        background: #00b43c
+        color: #fff
 </style>
 
