@@ -9,7 +9,7 @@
           <div v-show="totalCount>0" class="num">{{totalCount}}</div>
         </div>
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
-        <div class="desc">另需配送费￥4元</div>
+        <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
       <div class="deliver">
         <div class="normal" v-if="totalPrice===0">￥{{minPrice}}起送</div>
@@ -50,8 +50,8 @@ export default {
       let total=0;
       this.selectFood.forEach((food)=>{
         total+=food.count
-        return total
       })
+      return total
     }
   }
 }
