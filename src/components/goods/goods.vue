@@ -59,7 +59,12 @@
       </cube-scroll-nav>
     </div>
     <div class="shop-wrap">
-      <cart-shop :select-food="selectFood"></cart-shop>
+      <cart-shop 
+        :select-food="selectFood" :seller="seller"
+        :delivery-price="seller.deliveryPrice"
+        :min-price="seller.minPrice"
+      >
+      </cart-shop>
     </div>
   </div>
 </template>
@@ -100,6 +105,9 @@ export default {
     fetch(){
       getGoods().then(goods=>{
         this.goods=goods
+      }),
+      getSeller().then(seller=>{
+        this.seller=seller
       })
     }
   },
