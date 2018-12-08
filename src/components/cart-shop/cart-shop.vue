@@ -6,22 +6,50 @@
           <div class="logo" :class="{'highlight':totalPrice>0}">
             <i class="icon-shopping_cart"></i>
           </div>
-          <div v-show="totalCount>0" class="num">{{totalCount}}</div>
+          <bubble v-show="totalCount>0" :totalCount="totalCount"></bubble> 
         </div>
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="deliver">
-        <div class="normal" v-if="totalPrice===0">￥{{minPrice}}起送</div>
-        <div class="normal" v-if="totalPrice<minPrice">还差￥{{minPrice-totalPrice}}起送</div>
-        <div class="active" v-if="totalPrice>=minPrice">去结算</div>
+      <div class="deliver" :class="{active:totalPrice>=minPrice}">
+        {{pay}}
+      </div>
+      <div class="ball-container">
+        <div v-for="(ball,index) in balls" :key="index">
+          <transition
+            @before-enter="beforeDrop"
+            @enter="dropping"
+            @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Bubble from 'components/bubble/bubble'
+
+const LENG=10;
+function creatBall(){
+  let balls=[];
+  for( let i=0;i<LENG;i++){
+    balls.push({
+      show: false
+    })
+    return balls;
+  }
+}
+
 export default {
+  data() {
+    return {
+      balls: creatBall()
+    }
+  },
   props:{
     selectFood: {
       type: Array,
@@ -38,6 +66,9 @@ export default {
       default: 0
     }
   },
+  created() {
+    this.dropBalls = []
+  },
   computed:{
     totalPrice(){
       let total=0;
@@ -52,7 +83,57 @@ export default {
         total+=food.count
       })
       return total
+    },
+    pay(){
+      if(this.totalPrice===0){
+        return `￥${this.minPrice}元起送`
+      }else if(this.totalPrice<this.minPrice){
+        let diff=this.minPrice-this.totalPrice
+        return `还差￥${diff}元起送`
+      }else{
+        return '去结算'
+      }
     }
+  },
+  methods:{
+    drop(el) {
+      for (let i = 0; i < this.balls.length; i++) {
+        const ball = this.balls[i]
+        if (!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBalls.push(ball)
+          return
+        }
+      }
+    },
+    beforeDrop(el) {
+      const ball = this.dropBalls[this.dropBalls.length - 1]
+      const rect = ball.el.getBoundingClientRect()
+      const x = rect.left - 32
+      const y = -(window.innerHeight - rect.top - 22)
+      el.style.display = ''
+      el.style.transform = el.style.webkitTransform = `translate3d(0,${y}px,0)`
+      const inner = el.getElementsByClassName(innerClsHook)[0]
+      inner.style.transform = inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+    },
+    dropping(el, done) {
+      this._reflow = document.body.offsetHeight
+      el.style.transform = el.style.webkitTransform = `translate3d(0,0,0)`
+      const inner = el.getElementsByClassName(innerClsHook)[0]
+      inner.style.transform = inner.style.webkitTransform = `translate3d(0,0,0)`
+      el.addEventListener('transitionend', done)
+    },
+    afterDrop(el) {
+      const ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
+    },
+  },
+  components: {
+    Bubble
   }
 }
 </script>
@@ -91,22 +172,6 @@ export default {
           &.highlight
             background: #00a0dc
             color: #fff
-        .num
-          position: absolute 
-          top: 0
-          right: 0
-          padding: 0 5px
-          height: 16px
-          width: 13px
-          line-height: 16px
-          text-align: center
-          color: #fff
-          background: #f01414
-          border-radius: 16px
-          font-family: Helvetica
-          font-weight: 700
-          font-size: 9px
-          box-shadow: 4px 0 8px rgba(0,0,0,.4) 
       .price
         line-height: 48px
         margin: 0 12px
@@ -132,8 +197,22 @@ export default {
       color: #808589
       font-size: 12px
       font-weight: bold
-      .active
+      &.active
         background: #00b43c
         color: #fff
+    .ball-container
+      .ball
+        position: fixed
+        left: 32px
+        bottom: 22px
+        z-index: 200
+        transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        .inner
+          width: 16px
+          height: 16px
+          border-radius: 50%
+          background: $color-blue
+          transition: all 0.4s linear
+
 </style>
 

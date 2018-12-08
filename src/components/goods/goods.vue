@@ -24,7 +24,7 @@
                 ></support-icon>
                 <span>{{props.txt.name}}</span>
                 <span class="num" v-if="props.txt.count">
-                  <!-- <bubble :num="props.txt.count"></bubble> -->
+                  <bubble :totalCount="props.txt.count"></bubble>
                 </span>
               </div>
             </template>
@@ -52,7 +52,7 @@
                   </div>
                 </div>
               </div>
-              <cart-ctrol class="art-ctrol" :food="food"></cart-ctrol>
+              <cart-ctrol class="art-ctrol" :food="food" @add="onadd"></cart-ctrol>
             </li>
           </ul>
         </cube-scroll-nav-panel>
@@ -60,6 +60,7 @@
     </div>
     <div class="shop-wrap">
       <cart-shop 
+        ref="shopCart"
         :select-food="selectFood" :seller="seller"
         :delivery-price="seller.deliveryPrice"
         :min-price="seller.minPrice"
@@ -75,6 +76,7 @@ import {getSeller} from 'api'
 import SupportIcon from 'components/support-icon/support-icon'
 import CartCtrol from 'components/cart-ctrol/cart-ctrol'
 import CartShop from 'components/cart-shop/cart-shop'
+import Bubble from 'components/bubble/bubble'
 
 export default {
   props:{
@@ -109,7 +111,10 @@ export default {
       getSeller().then(seller=>{
         this.seller=seller
       })
-    }
+    },
+    onadd(target) {
+      this.$refs.shopCart.drop(target)
+    },
   },
   computed:{
     selectFood(){
@@ -143,7 +148,8 @@ export default {
   components:{
     SupportIcon,
     CartCtrol,
-    CartShop
+    CartShop,
+    Bubble
   }
 }
 </script>
@@ -184,7 +190,7 @@ export default {
         position: relative
     .num
       position: absolute
-      right: -8px
+      right: -4px
       top: -10px
     .support-icon
       display: inline-block
@@ -267,22 +273,6 @@ export default {
                   color:rgb(147,153,159)
                   font-weight: 200 
               
-
-
-            
-        
-      
-
-
-
-
-
-
-
-
-
-
-
   .shop-wrap
     position: absolute
     left:0
