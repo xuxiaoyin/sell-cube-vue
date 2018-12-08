@@ -112,8 +112,8 @@ export default {
         this.seller=seller
       })
     },
-    onadd(target) {
-      this.$refs.shopCart.drop(target)
+    onadd(el) {
+      this.$refs.shopCart.drop(el)
     },
   },
   computed:{

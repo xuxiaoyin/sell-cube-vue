@@ -25,7 +25,7 @@ export default {
       }else{
         this.food.count++
       }
-      this.$emit('EVENT_ADD',event.target)
+      this.$emit(EVENT_ADD,event.target)
     },
     decrease(){
       if(this.food.count){
