@@ -1,7 +1,7 @@
 <template>
   <div class="cart-shop">
     <div class="cart-wrap">
-      <div class="left-info">
+      <div class="left-info" @click="toggleList">
         <div class="logo-wrap">
           <div class="logo" :class="{'highlight':totalPrice>0}">
             <i class="icon-shopping_cart"></i>
@@ -49,7 +49,8 @@ function creatBall(){
 export default {
   data() {
     return {
-      balls: creatBall()
+      balls: creatBall(),
+      listFold: this.fold
     }
   },
   props:{
@@ -66,6 +67,14 @@ export default {
     deliveryPrice: {
       type: Number,
       default: 0
+    },
+    fold: {
+      type: Boolean,
+      default: true
+    },
+    sticky: {
+      type: Boolean,
+      default: false
     }
   },
   created(){
@@ -124,7 +133,7 @@ export default {
        this._reflow = document.body.offsetHeight
         el.style.transform=el.style.WebkitTransform='translate3d(0,0,0)'
         const inner=el.getElementsByClassName(innerClsHook)[0]
-        inner.style.transform=el.style.WebkitTransform='translate3d(0,0,0)'
+        inner.style.transform=inner.style.WebkitTransform='translate3d(0,0,0)'
         el.addEventListener('transitionend',done)
     },
     afterdrop(el){
@@ -133,7 +142,53 @@ export default {
         ball.show=false
         el.style.display='none'
       }
+    },
+    toggleList(){
+      if(this.listFold){
+        if(!this.totalCount){
+          return
+        }
+        this.listFold=false
+        this._showCartList()
+        this._showCartSticky()
+      }else{
+        this.listFold=true
+        this._hideCartList()
+      }
+    },
+    _showCartList(){
+      this.shopCartListComp =this.shopCartListComp || this.$createShopCartList({
+        $props:{
+          selectFood:'selectFood'
+        },
+        $events:{
+          hide: ()=>{
+            this.listFold=true   //点击背景影藏的时候把listFold设置为true
+          },
+          add: (el)=>{
+            this.shopCartStycky.drop(el)
+          }
+        }
+      })
+      this.shopCartListComp.show()
+    },
+    _hideCartList(){
+      const com=this.sticky?this.$parent.list:this.shopCartListComp //判断是否存在sticky
+      com.hide()&&com.hide()//有hide就执行
+    },
+    _showCartSticky(){
+      this.shopCartStycky=this.shopCartStycky || this.$createShopCartSticky({
+        $props:{
+          selectFood:'selectFood',
+          minPrice: 'minPrice',
+          deliveryPrice: 'deliveryPrice',
+          fold: 'listFold',
+          list: this.shopCartListComp
+        }
+      })
+      this.shopCartStycky.show()
     }
+
   },
   components: {
     Bubble
