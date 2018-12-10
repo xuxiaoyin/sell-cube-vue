@@ -29,14 +29,14 @@ export default {
           label: '商品',
           component: Goods,
           data:{
-            goods: this.goods
+            seller: this.seller
           }
         },
         {
           label: '评价',
           component: Ratings,
           data:{
-            ratings: this.ratings
+            seller: this.seller
           }
         },
         {

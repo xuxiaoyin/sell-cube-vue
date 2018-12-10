@@ -59,7 +59,7 @@
     <div class="shop-wrap">
       <cart-shop 
         ref="shopCart"
-        :select-food="selectFood" :seller="seller"
+        :select-food="selectFood" 
         :delivery-price="seller.deliveryPrice"
         :min-price="seller.minPrice"
       >
@@ -76,18 +76,17 @@ import CartShop from 'components/cart-shop/cart-shop'
 import Bubble from 'components/bubble/bubble'
 
 export default {
-  props:{
-    data:{
-      type:Object,
-      default(){
-        return{}
+  props: {
+      data: {
+        type: Object,
+        default() {
+          return {}
+        }
       }
-    }
-  },
+    },
   data() {
     return{
       goods:[],
-      seller:[],
       scrollOptions:{
         click:false,
         directionLockThreshold:0
@@ -108,6 +107,9 @@ export default {
     },
   },
   computed:{
+    seller() {
+      return this.data.seller
+    },
     selectFood(){
       let foods=[];
       this.goods.forEach((good)=>{
@@ -141,6 +143,9 @@ export default {
     CartCtrol,
     CartShop,
     Bubble
+  },
+  mounted() {
+    console.log(this.seller)
   }
 }
 </script>
