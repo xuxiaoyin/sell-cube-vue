@@ -5,9 +5,7 @@
         :side="true"
         :data="goods"
         v-if="goods.length"
-        :options="scrollOptions"
-        @change="changeHandler"
-        @sticky-change="stickyChangeHandler">
+        :options="scrollOptions">
         <template slot="bar" slot-scope="props">
           <cube-scroll-nav-bar
             direction="vertical"
@@ -72,7 +70,6 @@
 
 <script>
 import {getGoods} from 'api'
-import {getSeller} from 'api'
 import SupportIcon from 'components/support-icon/support-icon'
 import CartCtrol from 'components/cart-ctrol/cart-ctrol'
 import CartShop from 'components/cart-shop/cart-shop'
@@ -98,19 +95,13 @@ export default {
     }
   },
   methods: {
-    changeHandler(label) {
-      console.log('changed to:', label)
-    },
-    stickyChangeHandler(current) {
-      console.log('sticky-change', current)
-    },
     fetch(){
-      getGoods().then(goods=>{
-        this.goods=goods
-      }),
-      getSeller().then(seller=>{
-        this.seller=seller
-      })
+      if(!this.fetched){
+        this.fetched=true
+        getGoods().then(goods=>{
+          this.goods=goods
+        })
+      }
     },
     onadd(el) {
       this.$refs.shopCart.drop(el)

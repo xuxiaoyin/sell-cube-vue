@@ -75,7 +75,7 @@ import CartCtrol from 'components/cart-ctrol/cart-ctrol'
         this.$emit(EVENT_ADD,target)
       },
       empty(){
-        this.DialogComp=this.DialogComp||this.$createDialog({
+        this.DialogComp=this.$createDialog({
           type:'confirm',
           content:'确认清空吗？',
           $events:{
