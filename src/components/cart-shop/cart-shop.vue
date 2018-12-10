@@ -1,7 +1,7 @@
 <template>
   <div class="cart-shop">
-    <div class="cart-wrap">
-      <div class="left-info" @click="toggleList">
+    <div class="cart-wrap"  @click="toggleList">
+      <div class="left-info">
         <div class="logo-wrap">
           <div class="logo" :class="{'highlight':totalPrice>0}">
             <i class="icon-shopping_cart"></i>
@@ -11,7 +11,7 @@
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="deliver" :class="{active:totalPrice>=minPrice}">
+      <div class="deliver" :class="{active:totalPrice>=minPrice}" @click="payPrice">
         {{pay}}
       </div>
       <div class="ball-container">
@@ -163,10 +163,13 @@ export default {
         },
         $events:{
           hide: ()=>{
-            this.listFold=true   //点击背景影藏的时候把listFold设置为true
+            this.listFold=true   //点击背景影藏的时候把listFold设置为true            
           },
           add: (el)=>{
             this.shopCartStycky.drop(el)
+          },
+          leave: ()=>{
+            this._hideCartSticky()
           }
         }
       })
@@ -187,8 +190,32 @@ export default {
         }
       })
       this.shopCartStycky.show()
+    },
+    _hideCartSticky(){
+      this.shopCartStycky.hide()
+    },
+    payPrice(e){
+      if(this.totalPrice<this.minPrice){
+        return
+      }
+      this.DiaoCom=this.$createDialog({
+        title: '支付',
+        content: `共${this.totalPrice}元`
+      })
+      this.DiaoCom.show()
+      e.stopPropagation()
     }
 
+  },
+  watch:{
+    fold(newVal){
+      this.listFold=newVal
+    },
+    totalCount(newVal){
+      if(!this.listFold&&!newVal){
+        this._hideCartList()
+      }
+    }
   },
   components: {
     Bubble
