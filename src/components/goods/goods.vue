@@ -34,7 +34,7 @@
           :label="item.name"
           :title="item.name">
           <ul class="food-wrap">
-            <li v-for="food in item.foods" :key="food.name" class="food border-bottom-1px">
+            <li v-for="food in item.foods" :key="food.name" class="food border-bottom-1px" @click="openFood(food)">
               <div class="food-detail">
                 <img :src="food.icon" width="57" height="57" class="pic">
                 <div class="text">
@@ -76,17 +76,18 @@ import CartShop from 'components/cart-shop/cart-shop'
 import Bubble from 'components/bubble/bubble'
 
 export default {
-  props: {
-      data: {
-        type: Object,
-        default() {
-          return {}
-        }
+  props:{
+    data:{
+      type:Object,
+      default(){
+        return{}
       }
-    },
+    }
+  },
   data() {
     return{
       goods:[],
+			selectedFood:{},
       scrollOptions:{
         click:false,
         directionLockThreshold:0
@@ -105,9 +106,36 @@ export default {
     onadd(el) {
       this.$refs.shopCart.drop(el)
     },
+		openFood(food) {
+			this.selectedFood=food
+			this._showFood()
+			this._showShopcartsticky()		
+		},
+		_showFood(){
+			this.openFoodCom=this.openFoodCom || this.$createFood({
+				$props:{
+					food:'selectedFood'  //要传为响应式的
+				}
+			})
+			this.openFoodCom.show()
+		},
+		_showShopcartsticky(){
+			this.shopCartStycky=this.shopCartStycky || this.$createShopCartSticky({
+				$props:{
+					selectFood:'selectFood',
+					deliveryPrice: this.seller.deliveryPrice,
+					minPrice: this.seller.minPrice,
+					fold: true
+				}
+			})
+			this.shopCartStycky.show()
+		},
+		_hideShopcartsticky(){
+			this.shopCartStycky.hide()
+		}
   },
   computed:{
-    seller() {
+    seller(){
       return this.data.seller
     },
     selectFood(){
@@ -143,9 +171,6 @@ export default {
     CartCtrol,
     CartShop,
     Bubble
-  },
-  mounted() {
-    console.log(this.seller)
   }
 }
 </script>

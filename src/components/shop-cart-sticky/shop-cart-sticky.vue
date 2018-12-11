@@ -16,6 +16,7 @@
 <script>
 import CartShop from 'components/cart-shop/cart-shop'
 const EVENT_HIDE='hide'
+const EVENT_SHOW='hide'
 export default {
   name: 'shop-cart-sticky',
   data(){
@@ -55,6 +56,7 @@ export default {
     },
     show(){
       this.visiable=true
+      this.$emit(EVENT_SHOW)
     },
     hide(){
       this.visiable=false
