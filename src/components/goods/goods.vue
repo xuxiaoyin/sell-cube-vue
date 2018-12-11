@@ -115,7 +115,15 @@ export default {
 			this.openFoodCom=this.openFoodCom || this.$createFood({
 				$props:{
 					food:'selectedFood'  //要传为响应式的
-				}
+        },
+        $events:{
+          leave: ()=>{
+            this._hideShopcartsticky()
+          },
+          add: (target)=>{
+            this.shopCartStycky.drop(target)
+          }
+        }
 			})
 			this.openFoodCom.show()
 		},
