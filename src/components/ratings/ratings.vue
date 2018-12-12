@@ -43,7 +43,7 @@
 					</div>
 					<div class="text">{{item.text}}</div>
 					<div class="recommend" v-show="item.recommend">
-						<span class="item" v-for="recommend in item.recommend">{{recommend}}</span>
+						<span class="icon-thumb_up"></span><span class="item" v-for="recommend in item.recommend">{{recommend}}</span>
 					</div>
 					<div class="time">{{formateTime(item.rateTime)}}</div>
 				</div>
@@ -203,6 +203,7 @@ export default {
 		.content
 			flex: 1
 			position: relative
+			white-space: normal
 			.user
 				line-height: 11px
 				font-size: 10px
@@ -222,6 +223,37 @@ export default {
 				line-height: 18px
 				font-size: 12px
 				color: #2c3238
-				white-space: normal
+			.recommend
+				margin-top: 8px
+				overflow: hidden
+				.icon-thumb_up
+					float: left
+					font-size: 12px
+					color: #00a0dc
+					line-height: 16px
+					margin-right: 8px
+				.item
+					float: left
+					height: 16px
+					max-width: 63px
+					line-height: 16px
+					padding: 0 5px
+					box-sizing: border-box
+					margin:0 8px 4px 0
+					overflow: hidden
+					text-overflow: ellipsis
+					white-space: nowrap
+					font-size: 9px
+					color: #93999f
+					border: 1px solid #e6e7e8
+					border-radius: 2px
+			.time
+				position: absolute 
+				top: 0
+				right: 0
+				font-size: 10px
+				color: #93999f
+
+
 				
 </style>
