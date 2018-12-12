@@ -1,7 +1,7 @@
 <template>
 <transition name="fade" @after-leave="afterLeave">
 	<div class="food-wrap" v-show="visiable">
-		<cube-scroll ref="scroll">
+		<cube-scroll ref="scroll" :data="ratings">
 			<div class="food">
 				<div class="top-img">
 					<img :src="food.image" />
@@ -39,7 +39,7 @@
 						:onlyContent="onlyContent"
 						@select="onSelect"
 						@toggle="onToggle"></rating-select>
-					<ul class="list">
+					<ul class="list" v-show="computedRatings && computedRatings.length">
 						<li class="list-item" v-for="item in computedRatings">
 							<div class="user">
 								<span class="name">{{item.username}}</span>
@@ -52,6 +52,7 @@
 							</p>
 						</li>
 					</ul>
+					<div class="no-rating" v-show="!computedRatings || !computedRatings.length">暂无评价</div>
 				</div>
 				
 			</div>
@@ -259,6 +260,10 @@ export default {
 			font-size: 14px
 			color: #07111b
 			padding: 0 18px
+		.no-rating
+			padding: 18px
+			font-size: 12px
+			color: #93999f
 		.list
 			padding: 0 18px
 			.list-item
