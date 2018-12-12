@@ -34,19 +34,19 @@
 		</rating-select>
 		<ul class="list">
 			<li class="list-item" v-for="item in computedRatings">
-				<div class="avatar-wrap"><img :src="item.avatar" width="28px" height="28px"/></div>
+				<div class="avatar-wrap"><img :src="item.avatar" width="28px" height="28px" class="avatar"/></div>
 				<div class="content">
 					<div class="user">{{item.username}}</div>
+					<div class="star-info">
+						<star :size=1 :score="item.score" class="star"></star>
+						<div class="delivery" v-show="item.deliveryTime">{{item.deliveryTime}}分钟送达</div>
+					</div>
+					<div class="text">{{item.text}}</div>
+					<div class="recommend" v-show="item.recommend">
+						<span class="item" v-for="recommend in item.recommend">{{recommend}}</span>
+					</div>
+					<div class="time">{{formateTime(item.rateTime)}}</div>
 				</div>
-				<div class="star-info">
-					<star :size=1 :score="item.score" class="star"></star>
-					<div class="delivery" v-show="item.deliveryTime">{{item.deliveryTime}}分钟送达</div>
-				</div>
-				<div class="text">{{item.text}}</div>
-				<div class="recommend" v-show="item.recommend">
-					<span class="item" v-for="recommend in item.recommend">{{recommend}}</span>
-				</div>
-				<div class="time">{{formateTime(item.rateTime)}}</div>
 			</li>
 		</ul>
 	</div>
@@ -127,6 +127,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import "~common/stylus/mixin"
 .rating-wrap
 	position: relative
 	height: 100%
@@ -187,5 +188,40 @@ export default {
 					line-height: 18px
 					font-size: 12px
 					color: #93999f
-					
+	.list
+		position: relative
+		padding: 0 18px
+		.list-item
+			display: flex
+			padding: 18px 0
+			border-1px(#e6e7e8)
+		.avatar-wrap
+			flex: 0 0 39px
+			width: 39px
+			.avatar
+				border-radius: 50%
+		.content
+			flex: 1
+			position: relative
+			.user
+				line-height: 11px
+				font-size: 10px
+				color: #07111b
+			.star-info
+				display: flex
+				align-items: center
+				height: 22px
+				.star
+					flex: 0 0 69px
+					width: 69px
+				.delivery
+					flex: 1
+					line-height: 22px
+					font-size: 10px
+			.text
+				line-height: 18px
+				font-size: 12px
+				color: #2c3238
+				white-space: normal
+				
 </style>
