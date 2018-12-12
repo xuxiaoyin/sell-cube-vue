@@ -32,7 +32,26 @@
 				<split></split>
 				<div class="rating">
 					<div class="title">商品评价</div>
-					<rating-select :ratings="food.ratings"></rating-select>
+					<rating-select 
+						:ratings="ratings" 
+						:desc="desc"
+						:selectType="selectType"
+						:onlyContent="onlyContent"
+						@select="onSelect"
+						@toggle="onToggle"></rating-select>
+					<ul class="list">
+						<li class="list-item" v-for="item in computedRatings">
+							<div class="user">
+								<span class="name">{{item.username}}</span>
+								<img class="avatar" :src="item.avatar" />
+							</div>
+							<div class="time">{{formateTime(item.rateTime)}}</div>
+							<p class="text">
+								<span :class="{'icon-thumb_up':item.rateType===0,'icon-thumb_down':item.rateType===1}"></span>
+								{{item.text}}
+							</p>
+						</li>
+					</ul>
 				</div>
 				
 			</div>
@@ -42,6 +61,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import CartCtrol from 'components/cart-ctrol/cart-ctrol'
 import Split from 'components/split/split'
 import RatingSelect from 'components/rating-select/rating-select'
@@ -50,6 +70,7 @@ const EVENT_SHOW='show'
 const EVENT_HIDE='hide'
 const EVENT_LEAVE='leave'
 const EVENT_ADD='add'
+const ALL=2
 export default {
   name:'food',
 	props: {
@@ -62,13 +83,23 @@ export default {
 			visiable: {
 				type: Boolean,
 				default: false
-			}
+			},
+			desc: {
+				all: '全部',
+				positive: '推荐',
+				negative: '吐槽'
+			},
+			selectType: ALL,
+      onlyContent: false
 		}
 	},
 	methods:{
 		show() {
 			this.visiable=true
 			this.$emit(EVENT_SHOW)
+			this.$nextTick(()=>{
+				this.$refs.scroll.refresh()  //显示的时候更新重新计算高度
+			})
 		},
 		hide() {
 			this.visiable=false
@@ -86,7 +117,33 @@ export default {
 		},
 		addFood(target){
 			this.$emit(EVENT_ADD,target)
+		},
+		onSelect(type){
+			this.selectType=type
+		},
+		onToggle(){
+			this.onlyContent=!this.onlyContent
+		},
+		formateTime(time){
+			return moment(time).format('YYYY-MM-DD hh:mm')
 		}
+	},
+	computed:{
+		ratings(){
+			return this.food.ratings
+		},
+		computedRatings() {
+      let ret = []
+      this.ratings.forEach((rating) => {
+        if (this.onlyContent && !rating.text) {
+          return
+        }
+        if (this.selectType === ALL || rating.rateType === this.selectType) {
+          ret.push(rating)
+        }
+      })
+      return ret
+    }
 	},
 	components:{
 		CartCtrol,
@@ -97,7 +154,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+@import "~common/stylus/mixin"
 .food-wrap
 	position: fixed
 	top: 0
@@ -195,7 +252,54 @@ export default {
 			font-size: 12px
 			color: #4d555d
 			line-height: 24px
-
+	.rating
+		margin-top: 18px
+		.title
+			line-height: 14px
+			font-size: 14px
+			color: #07111b
+			padding: 0 18px
+		.list
+			padding: 0 18px
+			.list-item
+				position: relative
+				border-1px(#e6e7e8)
+				.user
+					position: absolute
+					right: 0
+					top: 0
+					.avatar
+						width: 12px
+						height: 12px
+						border-radius: 50%
+						overflow: hidden
+						box-sizing: border-box
+						border: 1px solid #b7b5af
+					.name
+						line-height: 12px
+						font-size: 10px
+						margin-right: 16px
+						color: #93999f
+				.time
+					height: 18px
+					line-height: 18px
+					margin-top: 13px
+					font-size: 10px
+					color: #93999f
+				.text
+					line-height: 26px
+					margin: 0
+					padding: 0
+					padding-bottom: 14px
+					font-size: 12px
+					color: #07111b
+					.icon-thumb_up
+						margin-right: 4px
+						color: #00a0dc
+					.icon-thumb_down
+						margin-right: 4px
+						color: #b7bbbf
+						
 </style>
 
 	
