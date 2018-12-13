@@ -33,7 +33,7 @@
 			@toggle="onToggle">
 		</rating-select>
 		<ul class="list">
-			<li class="list-item" v-for="item in computedRatings">
+			<li class="list-item" v-for="(item,index) in computedRatings" :key="index">
 				<div class="avatar-wrap"><img :src="item.avatar" width="28px" height="28px" class="avatar"/></div>
 				<div class="content">
 					<div class="user">{{item.username}}</div>
@@ -43,7 +43,7 @@
 					</div>
 					<div class="text">{{item.text}}</div>
 					<div class="recommend" v-show="item.recommend">
-						<span class="icon-thumb_up"></span><span class="item" v-for="recommend in item.recommend">{{recommend}}</span>
+						<span class="icon-thumb_up"></span><span class="item" v-for="(recommend,index) in item.recommend" :key="index">{{recommend}}</span>
 					</div>
 					<div class="time">{{formateTime(item.rateTime)}}</div>
 				</div>
@@ -102,7 +102,9 @@ export default {
 	  fetch(){
 	  	if(!this.fetched){
 	  		this.fetched=true
-	  		getRatings().then(ratings=>{
+	  		getRatings({
+          id: this.seller.id
+        }).then(ratings=>{
 	  			this.ratings=ratings
 	  		})
 	  	}
@@ -111,7 +113,6 @@ export default {
 		  this.selectType=type
 	  },
 	  onToggle(){
-		console.log(1)
 	  	this.onlyContent=!this.onlyContent
 	  },
 	  formateTime(time){

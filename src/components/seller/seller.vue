@@ -1,59 +1,263 @@
 <template>
-  <cube-scroll ref="scroll" class="seller-wrap" :options="scrollOptions">
-    <div class="seller">
+  <cube-scroll class="seller" :options="sellerScrollOptions">
+    <div class="seller-content">
       <div class="overview">
-        <div class="title">
-          <h1 class="name">{{seller.name}}</h1>
-          <div class="info">
-            <star :size=2 :score="seller.score" class="star"></star>
-            <span class="ratingcount" v-show="seller.ratingCount">({{seller.ratingCount}})</span>
-            <span class="sellcount" v-show="seller.sellCount">月售{{seller.sellCount}}单</span>
-          </div>
-          <div class="collect">
-            <span></span>
-            <span>已收藏</span>
-          </div>
+        <h1 class="title">{{seller.name}}</h1>
+        <div class="desc">
+          <star :size="2" :score="seller.score" class="star"></star>
+          <span class="text">({{seller.ratingCount}})</span>
+          <span class="text">月售{{seller.sellCount}}单</span>
+        </div>
+        <ul class="remark">
+          <li class="block">
+            <h2>起送价</h2>
+            <div class="content">
+              <span class="stress">{{seller.minPrice}}</span>元
+            </div>
+          </li>
+          <li class="block">
+            <h2>商家配送</h2>
+            <div class="content">
+              <span class="stress">{{seller.deliveryPrice}}</span>元
+            </div>
+          </li>
+          <li class="block">
+            <h2>平均配送时间</h2>
+            <div class="content">
+              <span class="stress">{{seller.deliveryTime}}</span>分钟
+            </div>
+          </li>
+        </ul>
+        <div class="favorite" @click="toggleFavorite">
+          <span class="icon-favorite" :class="{'active':favorite}"></span>
+          <span class="text">{{favoriteText}}</span>
         </div>
       </div>
-    </div>
+      <split></split>
+      <div class="bulletin">
+        <h1 class="title">公告与活动</h1>
+        <div class="content-wrapper">
+          <p class="content">{{seller.bulletin}}</p>
+        </div>
+        <ul v-if="seller.supports" class="supports">
+          <li
+            class="support-item"
+            v-for="(item,index) in seller.supports"
+            :key="index"
+          >
+            <support-ico :size=4 :type="seller.supports[index].type" class="icon"></support-ico>
+            <span class="text">{{seller.supports[index].description}}</span>
+          </li>
+        </ul>
+      </div>
+      <split></split>
+      <div class="pics">
+        <h1 class="title">商家实景</h1>
+        <cube-scroll
+          ref="scroll"
+          direction="horizontal"
+          :options="picScrollOptions"
+          class="pic-wrap">
+          <ul class="list-wrapper">
+            <li v-for="(item,index) in seller.pics" class="list-item" :key="index">
+              <img :src="item" width="120" height="90"/>
+            </li>
+          </ul>
+        </cube-scroll>
+      </div>
+      <split></split>
+      <div class="seller-info">
+        <h1 class="title">商家信息</h1>
+        <ul class="info">
+          <li class="info-items" v-for="(info,index) in seller.infos" :key="index">
+            {{info}}
+          </li>
+        </ul>
+      </div>
+    </div> 
   </cube-scroll>
 </template>
 
 <script>
+import { saveToLocal, loadFromLocal } from 'common/js/storage'
 import Star from 'components/star/star'
-export default {
-  props: {
-    data: {
-      type: Object,
-      default(){
-        return {}
+import Split from 'components/split/split'
+import SupportIco from 'components/support-icon/support-icon'
+
+  export default {
+    props: {
+      data: {
+        type: Object,
+        default() {
+          return {}
+        }
       }
-    }
-  },
-  data() {
-    return {
-      scrollOptions: {
-        click: false,
-        directionLockThreshold: 0
+    },
+    data() {
+      return {
+        favorite: false,
+        sellerScrollOptions: {
+          directionLockThreshold: 0,
+          click: false
+        },
+        picScrollOptions: {
+          scrollX: true,
+          stopPropagation: true,
+          directionLockThreshold: 0
+        }
       }
+    },
+    computed: {
+      seller() {
+        return this.data.seller || {}
+      },
+      favoriteText() {
+        return this.favorite ? '已收藏' : '收藏'
+      }
+    },
+    created() {
+      this.favorite = loadFromLocal(this.seller.id, 'favorite', false)
+    },
+    methods: {
+      toggleFavorite() {
+        this.favorite = !this.favorite
+        saveToLocal(this.seller.id, 'favorite', this.favorite)
+      }
+    },
+    components: {
+      SupportIco,
+      Star,
+      Split
     }
-  },
-  computed: {
-    seller(){
-      return this.data.seller
-    }
-  },
-  components: {
-    Star
   }
-}
 </script>
 
 <style lang="stylus" scoped>
-.seller-wrap
-  position: relative
-  width: 100%
-  height: 100%
-  .overview
-    padding: 9px 18px 20px 18px
+@import "~common/stylus/mixin"
+
+  .seller
+    height: 100%
+    text-align: left
+    .overview
+      position: relative
+      padding: 18px
+      .title
+        margin-bottom: 8px
+        line-height: 14px
+        font-size: 14px
+        color: #07111b
+      .desc
+        display: flex
+        border-1px(#e6e7e8)
+        align-items: center
+        padding-bottom: 18px
+        .star
+          margin-right: 8px
+          >>>.star-item
+            margin: 0 3px
+        .text
+          margin-right: 12px
+          line-height: 18px
+          font-size: $fontsize-small-s
+          color: $color-grey
+      .remark
+        display: flex
+        padding-top: 18px
+        .block
+          flex: 1
+          text-align: center
+          border-right: 1px solid $color-col-line
+          &:last-child
+            border: none
+          h2
+            margin-bottom: 4px
+            line-height: 10px
+            font-size: $fontsize-small-s
+            color: $color-light-grey
+          .content
+            line-height: 24px
+            font-size: $fontsize-small-s
+            color: #07111b
+            .stress
+              font-size: $fontsize-large-xxx
+      .favorite
+        position: absolute
+        width: 50px
+        right: 11px
+        top: 18px
+        text-align: center
+        .icon-favorite
+          display: block
+          margin-bottom: 4px
+          line-height: 24px
+          font-size: $fontsize-large-xxx
+          color: $color-light-grey-s
+          &.active
+            color: $color-red
+        .text
+          line-height: 10px
+          font-size: $fontsize-small-s
+          color: $color-grey
+    .bulletin
+      padding: 18px 18px 0 18px
+      white-space: normal
+      .title
+        margin-bottom: 8px
+        line-height: 14px
+        color: #07111b
+        font-size: $fontsize-medium
+      .content-wrapper
+        border-1px(#e6e7e8)
+        padding: 0 12px 16px 12px
+        .content
+          line-height: 24px
+          font-size: $fontsize-small
+          color: $color-red
+		.supports
+			overflow: hidden
+			.support-item
+        height: 48px
+        display: flex
+        border-1px(#e6e7e8)
+        align-items: center
+        .icon
+          width: 16px
+          margin: 0 6px 0 12px
+        .text
+          display: inline-block
+          font-size: 12px
+          color: #07111b
+  .pics
+    padding: 18px
+    .title
+      margin-bottom: 12px
+      font-size: 12px
+      color: #07111b
+    .pic-wrap
+      display: flex
+      align-items: center
+      .list-wrapper
+        .list-item
+          display: inline-block
+          margin-right: 6px
+          width: 120px
+          height: 90px
+          &:last-child
+            margin-right: 0
+  .seller-info
+    padding: 18px
+    white-space: normal
+    .title
+      padding-bottom: 12px
+      font-size: 14px
+      border-1px(#e6e7e8)
+    .info
+      .info-items
+        display: table
+        padding: 14px 12px
+        line-height: 17px
+        font-size: 12px
+        color: 07111b
+        border-1px(#e6e7e8)
+
 </style>

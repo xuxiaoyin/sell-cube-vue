@@ -44,3 +44,8 @@ vue create hello-world
 安装依赖报错
 报错: npm resource busy or locked.....
 解决方案：关掉360
+
+
+moment
+query-string
+storage

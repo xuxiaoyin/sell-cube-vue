@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import qs from 'query-string'
 import VHeader from 'components/v-header/v-header'
 import {getSeller,getGoods,getRatings} from 'api'
 import Tab from 'components/tab/tab'
@@ -18,7 +19,9 @@ import Seller from 'components/seller/seller'
 export default {
   data(){
     return {
-      seller: {}
+      seller: {
+        id: qs.parse(location.search).id
+      }
 
     }
   },
@@ -50,7 +53,9 @@ export default {
     }
   },
   created(){
-    getSeller().then( (seller) =>{
+    getSeller({
+      id: this.seller.id
+    }).then( (seller) =>{
       this.seller=seller
     })
   },
