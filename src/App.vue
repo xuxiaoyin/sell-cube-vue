@@ -53,11 +53,16 @@ export default {
     }
   },
   created(){
-    getSeller({
-      id: this.seller.id
-    }).then( (seller) =>{
-      this.seller=seller
-    })
+    this._getSeller()
+  },
+  methods:{
+    _getSeller(){
+      getSeller({
+          id: this.seller.id
+        }).then((seller) => {
+          this.seller = Object.assign({}, this.seller, seller)
+      })
+    }
   },
   components:{
     VHeader,
